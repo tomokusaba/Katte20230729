@@ -1,0 +1,199 @@
+﻿@page "/"
+@using Katte20230729.Logic
+@using Katte20230729.Data
+@using Microsoft.SemanticKernel.AI.ChatCompletion;
+@inject Katte20230729.Logic.OpenAILogic logic
+@inject PromptData prompt
+
+<p>@prompt.PromptExplanation</p>
+<textarea rows="4" cols="80" @bind=Search />
+<br />
+<button type="submit" @onclick="OnSearch">検索</button>
+
+<br />
+<button type="button" @onclick="OnClear">クリア</button>
+
+<hr />
+<button type="button" @onclick="Shazai">謝罪文</button>
+<button type="button" @onclick="ToEnglish">英語翻訳</button>
+<button type="button" @onclick="Haruki">村上春樹</button>
+<button type="button" @onclick="Soseki">夏目漱石</button>
+<button type="button" @onclick="Neko">ねこ</button>
+<button type="button" @onclick="Hantai">反対意見</button>
+<button type="button" @onclick="Sansei">賛成意見</button>
+<button type="button" @onclick="Tanuki">タ行抜き</button>
+<button type="button" @onclick="CSharp">C#</button>
+
+@if (Messages != null)
+{
+    <table class="table table-striped">
+        <tbody>
+            @foreach (var message in Messages.OrderByDescending(x => x.Time))
+            {
+                <tr>
+                    <td>@message.Name</td>
+                    @if (message.Name == "Reply")
+                    {
+                        <td>
+                            @(
+                                (MarkupString)message.Message
+                                )
+                        </td>
+                    }
+                    else
+                    {
+                        <td>@message.Message</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private string? Search;
+    private List<ChatMessage> Messages = new();
+
+
+    private void OnClear()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        logic.ClearChatHistory();
+
+    }
+
+    private void Shazai()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "これは、謝罪文を生成するBotです。あなたは顧客に対して誠心誠意謝罪しなければなりません。";
+        prompt.PromptExplanation = "謝罪文生成Bot";
+        logic.ClearChatHistory();
+
+    }
+
+    private void ToEnglish()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "英語に翻訳するChatです。これから入力する文章はすべてそのまま、英語に翻訳されて返却されます。";
+        prompt.PromptExplanation = "英語翻訳";
+        logic.ClearChatHistory();
+
+    }
+
+    private void Haruki()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "村上春樹っぽい文体で返答してください。";
+        prompt.PromptExplanation = "村上春樹Bot";
+        logic.ClearChatHistory();
+
+    }
+
+    private void Soseki()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "夏目漱石っぽい文体で返答してください。";
+        prompt.PromptExplanation = "夏目漱石Bot";
+        logic.ClearChatHistory();
+    }
+
+    private void Neko()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "あなたはねこです。必ず、語尾ににゃーーんをつけて返答をしてください。";
+        prompt.PromptExplanation = "ねこBot";
+        logic.ClearChatHistory();
+    }
+
+    private void Hantai()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "あなたは、ひねくれ者です。今からいう意見に対して必ず反対意見をいってください。理由も１００文字以上で述べてください。";
+        prompt.PromptExplanation = "反対意見Bot";
+        logic.ClearChatHistory();
+    }
+
+    private void Sansei()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "今からいう意見に対して必ず賛成意見をいってください。理由も１００文字以上で述べてください。";
+        prompt.PromptExplanation = "賛成意見Bot";
+        logic.ClearChatHistory();
+    }
+
+    private void Tanuki()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "今からいう回答は絶対にた行の文字を使ってはいけません。つまり、た、ち、つ、て、と　の５文字は回答に使ってはいけません。";
+        prompt.PromptExplanation = "た行抜きBot";
+        logic.ClearChatHistory();
+    }
+
+    private void CSharp()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "回答はすべてC#のコードで表現してください。";
+        prompt.PromptExplanation = "C#Bot";
+        logic.ClearChatHistory();
+    }
+
+
+    private async void OnSearch()
+    {
+        if (!string.IsNullOrWhiteSpace(Search))
+        {
+            logic.GeneratedHtml = string.Empty;
+            ChatMessage UserMessage = new();
+            UserMessage.Name = "User";
+            UserMessage.Message = Search;
+            Messages.Add(UserMessage);
+            Search = string.Empty;
+
+            ChatMessage reply = new();
+            reply.Name = "Reply";
+            reply.Message = logic.GeneratedHtml;
+
+            Messages.Add(reply);
+            StateHasChanged();
+            await logic.StreamRun(UserMessage.Message);
+
+            StateHasChanged();
+        }
+    }
+
+
+    protected override void OnInitialized()
+    {
+        logic.OnChange += () => OnCallback();
+    }
+
+    public void OnCallback()
+    {
+        _ = InvokeAsync(() =>
+        {
+            Messages.FindLast(x => x.Name == "Reply")!.Message = logic.GeneratedHtml;
+            StateHasChanged();
+        });
+    }
+}
