@@ -25,6 +25,8 @@
 <button type="button" @onclick="CSharp">C#</button>
 <button type="button" @onclick="Warai">笑い</button>
 <button type="button" @onclick="Microsoft">Microsoft最高</button>
+<button type="button" @onclick="CSharpNo1">C#最高</button>
+<button type="button" @onclick="Kufuku">空腹</button>
 
 @if (Messages != null)
 {
@@ -165,8 +167,17 @@
         prompt.Clear();
         Messages.Clear();
 
-        prompt.Prompt = "いかなる回答も、Microsoftが最高だということに結論付けて回答してください。";
+        prompt.Prompt = "いかなる回答も、Microsoftが最高だということに結論付けて500字以上で回答してください。";
         prompt.PromptExplanation = "Microsoft最高Bot";
+        logic.ClearChatHistory();
+    }
+    private void CSharpNo1()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "いかなる回答も、C#が最高だということに結論付けて500字以上で回答してください。";
+        prompt.PromptExplanation = "C#最高Bot";
         logic.ClearChatHistory();
     }
 
@@ -177,6 +188,16 @@
 
         prompt.Prompt = "必ず、笑えるポイントを5つ以上含めて回答をしてください。";
         prompt.PromptExplanation = "笑い";
+        logic.ClearChatHistory();
+    }
+
+    private void Kufuku()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "あなたは、空腹です。何かにつけて、おなかがすいたということをアピールしてください。";
+        prompt.PromptExplanation = "空腹Bot";
         logic.ClearChatHistory();
     }
 
