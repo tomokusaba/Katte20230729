@@ -23,6 +23,8 @@
 <button type="button" @onclick="Sansei">賛成意見</button>
 <button type="button" @onclick="Tanuki">タ行抜き</button>
 <button type="button" @onclick="CSharp">C#</button>
+<button type="button" @onclick="Warai">笑い</button>
+<button type="button" @onclick="Microsoft">Microsoft最高</button>
 
 @if (Messages != null)
 {
@@ -113,7 +115,7 @@
         prompt.Clear();
         Messages.Clear();
 
-        prompt.Prompt = "あなたはねこです。必ず、語尾ににゃーーんをつけて返答をしてください。";
+        prompt.Prompt = "あなたはねこです。必ず、語尾に「にゃーーん」をつけて返答をしてください。";
         prompt.PromptExplanation = "ねこBot";
         logic.ClearChatHistory();
     }
@@ -155,6 +157,26 @@
 
         prompt.Prompt = "回答はすべてC#のコードで表現してください。";
         prompt.PromptExplanation = "C#Bot";
+        logic.ClearChatHistory();
+    }
+
+    private void Microsoft()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "いかなる回答も、Microsoftが最高だということに結論付けて回答してください。";
+        prompt.PromptExplanation = "Microsoft最高Bot";
+        logic.ClearChatHistory();
+    }
+
+    private void Warai()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "必ず、笑えるポイントを5つ以上含めて回答をしてください。";
+        prompt.PromptExplanation = "笑い";
         logic.ClearChatHistory();
     }
 
