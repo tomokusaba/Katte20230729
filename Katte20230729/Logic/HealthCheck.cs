@@ -2,10 +2,10 @@
 
 namespace Katte20230729.Logic
 {
-    public class HelthCheck : IHealthCheck
+    public class HealthCheck : IHealthCheck
     {
         private readonly OpenAILogic _openAILogic;
-        public HelthCheck(OpenAILogic openAILogic)
+        public HealthCheck(OpenAILogic openAILogic)
         {
             _openAILogic = openAILogic;
         }
