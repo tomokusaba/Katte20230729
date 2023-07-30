@@ -55,6 +55,8 @@ namespace Katte20230729.Logic
             ChatRequestSettings settings = new()
             {
                 MaxTokens = 2000,
+                Temperature = 0.1,
+
             };
 
 

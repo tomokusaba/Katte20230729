@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddHealthChecks().AddCheck<HelthCheck>("");
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<OpenAILogic>();
 builder.Services.AddScoped<PromptData>();
@@ -30,5 +31,5 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
+app.MapHealthChecks("/healthz");
 app.Run();

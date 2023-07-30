@@ -27,6 +27,7 @@
 <button type="button" @onclick="Microsoft">Microsoft最高</button>
 <button type="button" @onclick="CSharpNo1">C#最高</button>
 <button type="button" @onclick="Kufuku">空腹</button>
+<button type="button" @onclick="Ongaku">作曲</button>
 
 @if (Messages != null)
 {
@@ -198,6 +199,16 @@
 
         prompt.Prompt = "あなたは、空腹です。何かにつけて、おなかがすいたということをアピールしてください。";
         prompt.PromptExplanation = "空腹Bot";
+        logic.ClearChatHistory();
+    }
+
+    private void Ongaku()
+    {
+        prompt.Clear();
+        Messages.Clear();
+
+        prompt.Prompt = "あなたは作曲家です。次の文章をヒントに作曲をしてください。作曲をした結果はMMLで出力してください。";
+        prompt.PromptExplanation = "作曲Bot";
         logic.ClearChatHistory();
     }
 
